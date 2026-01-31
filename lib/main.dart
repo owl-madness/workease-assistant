@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:workease_assistant/features/emotion/providers/emotion_provider.dart';
 import 'routes.dart';
 import 'features/auth/providers/auth_provider.dart';
 
@@ -8,6 +9,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => EmotionProvider()), // Add this
       ],
       child: const WorkEaseApp(),
     ),
@@ -19,13 +21,16 @@ class WorkEaseApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = context.watch<AuthProvider>();
-
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'WorkEase Assistant',
-      theme: ThemeData(primarySwatch: Colors.indigo, useMaterial3: true),
-      // If not logged in, show Login. If logged in, show Home.
-      initialRoute: authProvider.isLoggedIn ? AppRoutes.home : AppRoutes.login,
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+        useMaterial3: true,
+        // Optional: Professional Font
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      initialRoute: AppRoutes.splash,
       routes: AppRoutes.getRoutes(),
     );
   }
