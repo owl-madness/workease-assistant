@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workease_assistant/features/tasks/screens/task_screen.dart';
 import 'features/auth/screens/splash_screen.dart';
 import 'features/auth/screens/login_screen.dart';
 import 'features/home/screens/home_screen.dart';
@@ -14,6 +15,7 @@ class AppRoutes {
       splash: (context) => const SplashScreen(),
       login: (context) => const LoginScreen(),
       home: (context) => const HomeScreen(),
+      tasks: (context) => const TaskScreen(),
     };
   }
 }
