@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:workease_assistant/routes.dart';
 import '../providers/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -47,7 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     .read<AuthProvider>()
                     .login(_emailController.text, _passwordController.text);
                 if (success && mounted) {
-                  Navigator.pushReplacementNamed(context, '/');
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, AppRoutes.home, (route) => false);
                 }
               },
               child: const Text("Login"),
