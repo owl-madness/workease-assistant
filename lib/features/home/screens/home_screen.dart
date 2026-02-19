@@ -1,9 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../emotion/providers/emotion_provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() =>
+        Provider.of<EmotionProvider>(context, listen: false).initializeModel());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,15 +54,24 @@ class HomeScreen extends StatelessWidget {
               // 3. The Main Action Button
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
                 ),
-                onPressed: () {
+                onPressed: () async {
                   // Mocking the detection for now
-                  emotionProvider.updateMood("Happy");
+                  // emotionProvider.updateMood("Happy");
+
+                  final bytes =
+                      await rootBundle.load('assets/images/test_face.png');
+
+                  Provider.of<EmotionProvider>(context, listen: false)
+                      .analyzeImage(bytes.buffer.asUint8List());
                 },
                 icon: const Icon(Icons.camera_alt),
-                label: const Text("Capture My Emotion", style: TextStyle(fontSize: 18)),
+                label: const Text("Capture My Emotion",
+                    style: TextStyle(fontSize: 18)),
               ),
             ],
           ),
@@ -67,7 +89,8 @@ class HomeScreen extends StatelessWidget {
         ),
         Text(
           mood == "None" ? "---" : mood,
-          style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: Colors.indigo),
+          style: const TextStyle(
+              fontSize: 48, fontWeight: FontWeight.bold, color: Colors.indigo),
         ),
       ],
     );
