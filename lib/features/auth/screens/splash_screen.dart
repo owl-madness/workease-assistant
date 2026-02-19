@@ -26,7 +26,8 @@ class _SplashScreenState extends State<SplashScreen> {
     final isLoggedIn = context.read<AuthProvider>().isLoggedIn;
 
     // 3. Navigate to appropriate screen
-    if (isLoggedIn) {
+    // if (isLoggedIn) {R
+    if (1==1) {
       Navigator.pushReplacementNamed(context, AppRoutes.home);
     } else {
       Navigator.pushReplacementNamed(context, AppRoutes.login);
