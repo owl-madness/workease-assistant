@@ -50,6 +50,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 if (success && mounted) {
                   Navigator.pushNamedAndRemoveUntil(
                       context, AppRoutes.home, (route) => false);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Authentication failed!"),
+                      backgroundColor: Colors.redAccent,
+                    ),
+                  );
                 }
               },
               child: const Text("Login"),

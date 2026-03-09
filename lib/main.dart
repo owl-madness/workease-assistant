@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:workease_assistant/features/emotion/providers/emotion_provider.dart';
 import 'package:workease_assistant/features/tasks/providers/task_provider.dart';
 import 'routes.dart';
 import 'features/auth/providers/auth_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  await Hive.openBox('tasksBox');
   runApp(
     MultiProvider(
       providers: [

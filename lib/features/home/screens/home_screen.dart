@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../emotion/providers/emotion_provider.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -60,14 +62,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       borderRadius: BorderRadius.circular(30)),
                 ),
                 onPressed: () async {
-                  // Mocking the detection for now
-                  // emotionProvider.updateMood("Happy");
+                  final picker = ImagePicker();
 
-                  final bytes =
-                      await rootBundle.load('assets/images/test_face.png');
+                  final pickedFile = await picker.pickImage(
+                    source: ImageSource.camera,
+                    imageQuality: 90,
+                  );
 
-                  Provider.of<EmotionProvider>(context, listen: false)
-                      .analyzeImage(bytes.buffer.asUint8List());
+                  if (pickedFile == null) return;
+
+                  final bytes = await File(pickedFile.path).readAsBytes();
+
+                  await Provider.of<EmotionProvider>(context, listen: false)
+                      .analyzeImage(bytes);
                 },
                 icon: const Icon(Icons.camera_alt),
                 label: const Text("Capture My Emotion",
