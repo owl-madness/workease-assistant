@@ -14,18 +14,18 @@ class TaskScreen extends StatelessWidget {
       body: taskProvider.tasks.isEmpty
           ? const Center(child: Text("No tasks yet. Add one!"))
           : ListView.builder(
-        itemCount: taskProvider.tasks.length,
-        itemBuilder: (context, index) {
-          final task = taskProvider.tasks[index];
-          return ListTile(
-            title: Text(task.title),
-            leading: Checkbox(
-              value: task.isCompleted,
-              onChanged: (_) => taskProvider.toggleTaskStatus(index),
+              itemCount: taskProvider.tasks.length,
+              itemBuilder: (context, index) {
+                final task = taskProvider.tasks[index];
+                return ListTile(
+                  title: Text(task['title']), // Access via key
+                  leading: Checkbox(
+                    value: task['isCompleted'], // Access via key
+                    onChanged: (_) => taskProvider.toggleTaskStatus(index),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddTaskDialog(context),
         child: const Icon(Icons.add),
@@ -41,7 +41,9 @@ class TaskScreen extends StatelessWidget {
         title: const Text("New Task"),
         content: TextField(controller: controller),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel")),
           ElevatedButton(
             onPressed: () {
               if (controller.text.isNotEmpty) {

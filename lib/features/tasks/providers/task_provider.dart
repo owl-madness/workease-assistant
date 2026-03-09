@@ -1,36 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import '../models/task_model.dart';
 
 class TaskProvider with ChangeNotifier {
-  // Internal private list of tasks
-  final List<Task> _tasks = [];
+  final _myBox = Hive.box('tasksBox');
+  List<dynamic> _tasks = [];
 
-  // Getter to access tasks safely from the UI
-  List<Task> get tasks => _tasks;
+  List<dynamic> get tasks => _tasks;
 
-  // Create: Add a new task
-  void addTask(String title, {String? emotion}) {
-    final newTask = Task(
-      id: DateTime.now().toString(),
-      title: title,
-      // linkedEmotion: emotion,
-    );
-    _tasks.insert(0, newTask); // Add to top of the list
+  TaskProvider() {
+    loadTasks();
+  }
+
+  // Load tasks from Hive on startup
+  void loadTasks() {
+    _tasks = _myBox.get("TASK_LIST") ?? [];
     notifyListeners();
   }
 
-  // Update: Toggle completion status
+  // Save/Update Task
+  void addTask(String title) {
+    // We store as a Map for simplicity in a quick project
+    _tasks.add({
+      "title": title,
+      "isCompleted": false,
+    });
+    _updateDatabase();
+  }
+
   void toggleTaskStatus(int index) {
-    _tasks[index].isCompleted = !_tasks[index].isCompleted;
-    notifyListeners();
+    _tasks[index]["isCompleted"] = !_tasks[index]["isCompleted"];
+    _updateDatabase();
   }
 
-  // Delete: Remove a task
   void deleteTask(int index) {
     _tasks.removeAt(index);
-    notifyListeners();
+    _updateDatabase();
   }
 
-  // Helper: Get count of completed tasks (useful for progress bars later)
-  int get completedCount => _tasks.where((t) => t.isCompleted).length;
+  // The core Hive save function
+  void _updateDatabase() {
+    _myBox.put("TASK_LIST", _tasks);
+    notifyListeners();
+  }
 }
